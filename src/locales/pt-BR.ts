@@ -1,0 +1,227 @@
+const ptBR = {
+  // ── Common ──
+  "common.loading": "Carregando...",
+  "common.save": "Salvar",
+  "common.cancel": "Cancelar",
+  "common.delete": "Excluir",
+  "common.edit": "Editar",
+  "common.add": "Adicionar",
+  "common.confirm": "Confirmar",
+  "common.search": "Buscar",
+  "common.name": "Nome",
+  "common.observations": "Observações",
+  "common.phone": "Telefone",
+  "common.address": "Endereço",
+  "common.change": "Trocar",
+  "common.years": "anos",
+
+  // ── Sidebar ──
+  "sidebar.dashboard": "Dashboard",
+  "sidebar.prescriptions": "Prescrições",
+  "sidebar.templates": "Templates",
+  "sidebar.settings": "Configurações",
+
+  // ── Dashboard ──
+  "dashboard.title": "Dashboard",
+  "dashboard.prescriptions": "Prescrições",
+  "dashboard.templates": "Templates",
+  "dashboard.quickActions": "Ações rápidas",
+  "dashboard.newPrescription": "Nova prescrição",
+  "dashboard.newTemplate": "Novo template",
+
+  // ── Prescriptions ──
+  "prescriptions.title": "Prescrições",
+  "prescriptions.new": "Nova prescrição",
+  "prescriptions.createFirst": "Criar primeira prescrição",
+  "prescriptions.empty": "Nenhuma prescrição criada ainda.",
+  "prescriptions.editTitle": "Editar Prescrição",
+  "prescriptions.notFound": "Prescrição não encontrada",
+  "prescriptions.notFoundDesc": "A prescrição solicitada não foi encontrada.",
+  "prescriptions.newFromTemplate": "Nova Prescrição ({name})",
+  "prescriptions.newTitle": "Nova Prescrição",
+  "prescriptions.create": "Criar prescrição",
+  "prescriptions.saveChanges": "Salvar alterações",
+  "prescriptions.createdSuccess": "Prescrição criada com sucesso!",
+  "prescriptions.updatedSuccess": "Prescrição atualizada!",
+  "prescriptions.noMedications": "Nenhum medicamento adicionado",
+
+  // ── Prescription Card ──
+  "prescriptionCard.generateDoc": "Gerar documento",
+  "prescriptionCard.deleteTitle": "Excluir prescrição",
+  "prescriptionCard.deleteDesc": "Tem certeza que deseja excluir a prescrição de \"{name}\"? Esta ação não pode ser desfeita.",
+
+  // ── Prescription Form ──
+  "prescriptionForm.patient": "Paciente",
+  "prescriptionForm.patientName": "Nome do paciente",
+  "prescriptionForm.age": "Idade",
+  "prescriptionForm.weight": "Peso",
+  "prescriptionForm.weightPlaceholder": "70",
+  "prescriptionForm.height": "Altura",
+  "prescriptionForm.heightPlaceholder": "170",
+  "prescriptionForm.bmi": "IMC",
+  "prescriptionForm.bmiClassification.underweight": "Abaixo do peso",
+  "prescriptionForm.bmiClassification.normal": "Peso normal",
+  "prescriptionForm.bmiClassification.overweight": "Sobrepeso",
+  "prescriptionForm.bmiClassification.obese1": "Obesidade grau I",
+  "prescriptionForm.bmiClassification.obese2": "Obesidade grau II",
+  "prescriptionForm.bmiClassification.obese3": "Obesidade grau III",
+  "prescriptionForm.generalObs": "Observações gerais",
+  "prescriptionForm.generalObsPlaceholder": "Observações adicionais para a prescrição...",
+  "prescriptionForm.fixErrors": "Corrija os campos com erro antes de salvar.",
+
+  // ── Prescription Form Validation ──
+  "validation.patientNameRequired": "Nome do paciente é obrigatório.",
+  "validation.patientNameMin": "Nome deve ter pelo menos 2 caracteres.",
+  "validation.ageRange": "Idade deve ser entre 0 e 150.",
+  "validation.medNameRequired": "Nome é obrigatório.",
+  "validation.medDosageRequired": "Dosagem é obrigatória.",
+  "validation.medFrequencyRequired": "Frequência é obrigatória.",
+
+  // ── Templates ──
+  "templates.title": "Templates",
+  "templates.new": "Novo template",
+  "templates.createFirst": "Criar primeiro template",
+  "templates.empty": "Nenhum template criado ainda.",
+  "templates.editTitle": "Editar Template",
+  "templates.notFound": "Template não encontrado",
+  "templates.notFoundDesc": "O template solicitado não foi encontrado.",
+  "templates.newTitle": "Novo Template",
+  "templates.create": "Criar template",
+  "templates.saveChanges": "Salvar alterações",
+  "templates.createdSuccess": "Template criado com sucesso!",
+  "templates.updatedSuccess": "Template atualizado!",
+  "templates.noMedications": "Nenhum medicamento no template",
+  "templates.useTemplate": "Usar template",
+
+  // ── Template Card ──
+  "templateCard.deleteTitle": "Excluir template",
+  "templateCard.deleteDesc": "Tem certeza que deseja excluir o template \"{name}\"? Esta ação não pode ser desfeita.",
+
+  // ── Template Form ──
+  "templateForm.info": "Informações do Template",
+  "templateForm.name": "Nome do template",
+  "templateForm.namePlaceholder": "Ex: Gripe comum",
+  "templateForm.description": "Descrição",
+  "templateForm.descPlaceholder": "Descrição breve",
+  "templateForm.generalObs": "Observações gerais",
+  "templateForm.generalObsPlaceholder": "Observações adicionais para o template...",
+  "templateForm.fixErrors": "Corrija os campos com erro antes de salvar.",
+
+  // ── Template Validation ──
+  "validation.templateNameRequired": "Nome do template é obrigatório.",
+  "validation.templateNameMin": "Nome deve ter pelo menos 2 caracteres.",
+
+  // ── Medications (shared) ──
+  "medications.title": "Medicamentos",
+  "medications.medication": "Medicamento",
+  "medications.name": "Nome",
+  "medications.namePlaceholder": "Nome do medicamento",
+  "medications.dosage": "Dosagem",
+  "medications.dosagePlaceholder": "Ex: 500mg",
+  "medications.route": "Via",
+  "medications.routePlaceholder": "Ex: Oral",
+  "medications.frequency": "Frequência",
+  "medications.frequencyPlaceholder": "Ex: 8/8h",
+  "medications.duration": "Duração",
+  "medications.durationPlaceholder": "Ex: 7 dias",
+  "medications.observations": "Observações",
+  "medications.observationsPlaceholder": "Observações do medicamento",
+  "medications.remove": "Remover medicamento",
+  "medications.search": "Buscar medicamento...",
+
+  // ── Settings ──
+  "settings.title": "Configurações",
+  "settings.professional": "Dados do Profissional",
+  "settings.fullName": "Nome completo",
+  "settings.fullNamePlaceholder": "Dr. João Silva",
+  "settings.crm": "CRM",
+  "settings.crmPlaceholder": "CRM 12345 ou 12345/SP",
+  "settings.specialty": "Especialidade",
+  "settings.specialtyPlaceholder": "Clínica Geral",
+  "settings.phonePlaceholder": "Número de telefone",
+  "settings.email": "Email",
+  "settings.emailPlaceholder": "medico@email.com",
+  "settings.saveConfig": "Salvar configurações",
+  "settings.savedSuccess": "Configurações salvas!",
+  "settings.fixErrors": "Corrija os campos com erro antes de salvar.",
+
+  // ── Settings Validation ──
+  "validation.nameRequired": "Nome é obrigatório.",
+  "validation.nameMin3": "Nome deve ter pelo menos 3 caracteres.",
+  "validation.crmRequired": "CRM é obrigatório.",
+  "validation.crmInvalid": "Formato inválido. Ex: CRM 12345, 12345/SP ou CRM-SP 12345",
+  "validation.emailInvalid": "Email inválido.",
+  "validation.phoneMin": "Telefone deve ter pelo menos 8 dígitos.",
+
+  // ── Institutions ──
+  "institutions.title": "Instituições / Cabeçalhos",
+  "institutions.new": "Nova instituição",
+  "institutions.empty": "Nenhuma instituição cadastrada. Adicione uma para usar como cabeçalho nos documentos.",
+  "institutions.editTitle": "Editar Instituição",
+  "institutions.newTitle": "Nova Instituição",
+  "institutions.name": "Nome",
+  "institutions.namePlaceholder": "Hospital São Lucas",
+  "institutions.address": "Endereço",
+  "institutions.addressPlaceholder": "Rua das Flores, 123 - São Paulo/SP",
+  "institutions.logo": "Logo",
+  "institutions.addButton": "Adicionar",
+  "institutions.saveButton": "Salvar",
+  "institutions.deleteTitle": "Excluir instituição",
+  "institutions.deleteDesc": "Tem certeza que deseja excluir \"{name}\"? Esta ação não pode ser desfeita.",
+  "institutions.updatedSuccess": "Instituição atualizada!",
+  "institutions.addedSuccess": "Instituição adicionada!",
+  "institutions.nameRequired": "Nome da instituição é obrigatório.",
+  "institutions.nameRequiredShort": "Nome é obrigatório.",
+
+  // ── Document ──
+  "document.title": "Gerar Documento",
+  "document.institutionHeader": "Instituição / Cabeçalho",
+  "document.noInstitutions": "Nenhuma instituição cadastrada. Vá em Configurações para adicionar.",
+  "document.noHeader": "Sem cabeçalho",
+  "document.docType": "Tipo de Documento",
+  "document.prescription": "Prescrição",
+  "document.certificate": "Atestado",
+  "document.daysOff": "Dias de Afastamento",
+  "document.daysOffHelper": "Número de dias a partir da data de hoje.",
+  "document.includeCID": "Incluir CID no documento",
+  "document.cid": "CID",
+  "document.cidPlaceholder": "Buscar CID... (ex: J06, gripe)",
+  "document.print": "Imprimir / PDF",
+
+  // ── Document Preview ──
+  "document.receituario": "RECEITUÁRIO",
+  "document.atestadoMedico": "ATESTADO MÉDICO",
+  "document.patient": "Paciente:",
+  "document.patientAge": "Idade:",
+  "document.patientWeight": "Peso:",
+  "document.patientHeight": "Altura:",
+  "document.patientBMI": "IMC:",
+  "document.observationsLabel": "Observações:",
+  "document.certificateText": "Atesto para os devidos fins que o(a) Sr(a). {name} foi atendido(a) nesta data, necessitando de {days} ({daysWritten}) dia{plural} de afastamento de suas atividades laborais e/ou escolares, a partir desta data.",
+  "document.cidLabel": "CID:",
+  "document.doctorLabel": "MÉDICO",
+  "document.doctorNameDefault": "NOME DO MÉDICO",
+  "document.tel": "Tel:",
+  "document.via": "Via",
+  "document.por": "por",
+  "document.daysWrittenOne": "um",
+
+  // ── Logo Upload ──
+  "logoUpload.clickToUpload": "Clique para enviar o logo",
+  "logoUpload.fileTypes": "PNG, JPG ou SVG (máx. {size}KB)",
+  "logoUpload.removeLogo": "Remover logo",
+  "logoUpload.invalidFile": "Selecione um arquivo de imagem (PNG, JPG, SVG).",
+  "logoUpload.fileTooLarge": "A imagem deve ter no máximo {size}KB.",
+
+  // ── Phone Input ──
+  "phoneInput.placeholder": "Número de telefone",
+  "phoneInput.searchCountry": "Buscar país...",
+  "phoneInput.noCountry": "Nenhum país encontrado.",
+
+  // ── Confirm Dialog ──
+  "confirmDialog.defaultTitle": "Confirmar exclusão",
+  "confirmDialog.defaultDesc": "Tem certeza que deseja excluir? Esta ação não pode ser desfeita.",
+} as const
+
+export type TranslationKey = keyof typeof ptBR
+export default ptBR
