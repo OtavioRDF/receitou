@@ -1,0 +1,228 @@
+import type { TranslationKey } from "./pt-BR"
+
+const es: Record<TranslationKey, string> = {
+  // ── Common ──
+  "common.loading": "Cargando...",
+  "common.save": "Guardar",
+  "common.cancel": "Cancelar",
+  "common.delete": "Eliminar",
+  "common.edit": "Editar",
+  "common.add": "Agregar",
+  "common.confirm": "Confirmar",
+  "common.search": "Buscar",
+  "common.name": "Nombre",
+  "common.observations": "Observaciones",
+  "common.phone": "Teléfono",
+  "common.address": "Dirección",
+  "common.change": "Cambiar",
+  "common.years": "años",
+
+  // ── Sidebar ──
+  "sidebar.dashboard": "Panel",
+  "sidebar.prescriptions": "Prescripciones",
+  "sidebar.templates": "Plantillas",
+  "sidebar.settings": "Configuración",
+
+  // ── Dashboard ──
+  "dashboard.title": "Panel",
+  "dashboard.prescriptions": "Prescripciones",
+  "dashboard.templates": "Plantillas",
+  "dashboard.quickActions": "Acciones rápidas",
+  "dashboard.newPrescription": "Nueva prescripción",
+  "dashboard.newTemplate": "Nueva plantilla",
+
+  // ── Prescriptions ──
+  "prescriptions.title": "Prescripciones",
+  "prescriptions.new": "Nueva prescripción",
+  "prescriptions.createFirst": "Crear primera prescripción",
+  "prescriptions.empty": "No hay prescripciones creadas aún.",
+  "prescriptions.editTitle": "Editar Prescripción",
+  "prescriptions.notFound": "Prescripción no encontrada",
+  "prescriptions.notFoundDesc": "La prescripción solicitada no fue encontrada.",
+  "prescriptions.newFromTemplate": "Nueva Prescripción ({name})",
+  "prescriptions.newTitle": "Nueva Prescripción",
+  "prescriptions.create": "Crear prescripción",
+  "prescriptions.saveChanges": "Guardar cambios",
+  "prescriptions.createdSuccess": "¡Prescripción creada con éxito!",
+  "prescriptions.updatedSuccess": "¡Prescripción actualizada!",
+  "prescriptions.noMedications": "Ningún medicamento agregado",
+
+  // ── Prescription Card ──
+  "prescriptionCard.generateDoc": "Generar documento",
+  "prescriptionCard.deleteTitle": "Eliminar prescripción",
+  "prescriptionCard.deleteDesc": "¿Está seguro que desea eliminar la prescripción de \"{name}\"? Esta acción no se puede deshacer.",
+
+  // ── Prescription Form ──
+  "prescriptionForm.patient": "Paciente",
+  "prescriptionForm.patientName": "Nombre del paciente",
+  "prescriptionForm.age": "Edad",
+  "prescriptionForm.weight": "Peso",
+  "prescriptionForm.weightPlaceholder": "70",
+  "prescriptionForm.height": "Estatura",
+  "prescriptionForm.heightPlaceholder": "170",
+  "prescriptionForm.bmi": "IMC",
+  "prescriptionForm.bmiClassification.underweight": "Bajo peso",
+  "prescriptionForm.bmiClassification.normal": "Peso normal",
+  "prescriptionForm.bmiClassification.overweight": "Sobrepeso",
+  "prescriptionForm.bmiClassification.obese1": "Obesidad grado I",
+  "prescriptionForm.bmiClassification.obese2": "Obesidad grado II",
+  "prescriptionForm.bmiClassification.obese3": "Obesidad grado III",
+  "prescriptionForm.generalObs": "Observaciones generales",
+  "prescriptionForm.generalObsPlaceholder": "Observaciones adicionales para la prescripción...",
+  "prescriptionForm.fixErrors": "Corrija los campos con error antes de guardar.",
+
+  // ── Prescription Form Validation ──
+  "validation.patientNameRequired": "El nombre del paciente es obligatorio.",
+  "validation.patientNameMin": "El nombre debe tener al menos 2 caracteres.",
+  "validation.ageRange": "La edad debe estar entre 0 y 150.",
+  "validation.medNameRequired": "El nombre es obligatorio.",
+  "validation.medDosageRequired": "La dosis es obligatoria.",
+  "validation.medFrequencyRequired": "La frecuencia es obligatoria.",
+
+  // ── Templates ──
+  "templates.title": "Plantillas",
+  "templates.new": "Nueva plantilla",
+  "templates.createFirst": "Crear primera plantilla",
+  "templates.empty": "No hay plantillas creadas aún.",
+  "templates.editTitle": "Editar Plantilla",
+  "templates.notFound": "Plantilla no encontrada",
+  "templates.notFoundDesc": "La plantilla solicitada no fue encontrada.",
+  "templates.newTitle": "Nueva Plantilla",
+  "templates.create": "Crear plantilla",
+  "templates.saveChanges": "Guardar cambios",
+  "templates.createdSuccess": "¡Plantilla creada con éxito!",
+  "templates.updatedSuccess": "¡Plantilla actualizada!",
+  "templates.noMedications": "Ningún medicamento en la plantilla",
+  "templates.useTemplate": "Usar plantilla",
+
+  // ── Template Card ──
+  "templateCard.deleteTitle": "Eliminar plantilla",
+  "templateCard.deleteDesc": "¿Está seguro que desea eliminar la plantilla \"{name}\"? Esta acción no se puede deshacer.",
+
+  // ── Template Form ──
+  "templateForm.info": "Información de la Plantilla",
+  "templateForm.name": "Nombre de la plantilla",
+  "templateForm.namePlaceholder": "Ej: Gripe común",
+  "templateForm.description": "Descripción",
+  "templateForm.descPlaceholder": "Descripción breve",
+  "templateForm.generalObs": "Observaciones generales",
+  "templateForm.generalObsPlaceholder": "Observaciones adicionales para la plantilla...",
+  "templateForm.fixErrors": "Corrija los campos con error antes de guardar.",
+
+  // ── Template Validation ──
+  "validation.templateNameRequired": "El nombre de la plantilla es obligatorio.",
+  "validation.templateNameMin": "El nombre debe tener al menos 2 caracteres.",
+
+  // ── Medications (shared) ──
+  "medications.title": "Medicamentos",
+  "medications.medication": "Medicamento",
+  "medications.name": "Nombre",
+  "medications.namePlaceholder": "Nombre del medicamento",
+  "medications.dosage": "Dosis",
+  "medications.dosagePlaceholder": "Ej: 500mg",
+  "medications.route": "Vía",
+  "medications.routePlaceholder": "Ej: Oral",
+  "medications.frequency": "Frecuencia",
+  "medications.frequencyPlaceholder": "Ej: 8/8h",
+  "medications.duration": "Duración",
+  "medications.durationPlaceholder": "Ej: 7 días",
+  "medications.observations": "Observaciones",
+  "medications.observationsPlaceholder": "Observaciones del medicamento",
+  "medications.remove": "Eliminar medicamento",
+  "medications.search": "Buscar medicamento...",
+
+  // ── Settings ──
+  "settings.title": "Configuración",
+  "settings.professional": "Datos del Profesional",
+  "settings.fullName": "Nombre completo",
+  "settings.fullNamePlaceholder": "Dr. Juan García",
+  "settings.crm": "Matrícula",
+  "settings.crmPlaceholder": "MP 12345 o 12345/BA",
+  "settings.specialty": "Especialidad",
+  "settings.specialtyPlaceholder": "Medicina General",
+  "settings.phonePlaceholder": "Número de teléfono",
+  "settings.email": "Correo electrónico",
+  "settings.emailPlaceholder": "medico@email.com",
+  "settings.saveConfig": "Guardar configuración",
+  "settings.savedSuccess": "¡Configuración guardada!",
+  "settings.fixErrors": "Corrija los campos con error antes de guardar.",
+
+  // ── Settings Validation ──
+  "validation.nameRequired": "El nombre es obligatorio.",
+  "validation.nameMin3": "El nombre debe tener al menos 3 caracteres.",
+  "validation.crmRequired": "La matrícula es obligatoria.",
+  "validation.crmInvalid": "Formato inválido. Ej: MP 12345, 12345/BA o CRM-SP 12345",
+  "validation.emailInvalid": "Correo electrónico inválido.",
+  "validation.phoneMin": "El teléfono debe tener al menos 8 dígitos.",
+
+  // ── Institutions ──
+  "institutions.title": "Instituciones / Encabezados",
+  "institutions.new": "Nueva institución",
+  "institutions.empty": "No hay instituciones registradas. Agregue una para usar como encabezado en los documentos.",
+  "institutions.editTitle": "Editar Institución",
+  "institutions.newTitle": "Nueva Institución",
+  "institutions.name": "Nombre",
+  "institutions.namePlaceholder": "Hospital San Lucas",
+  "institutions.address": "Dirección",
+  "institutions.addressPlaceholder": "Calle de las Flores, 123 - Buenos Aires",
+  "institutions.logo": "Logo",
+  "institutions.addButton": "Agregar",
+  "institutions.saveButton": "Guardar",
+  "institutions.deleteTitle": "Eliminar institución",
+  "institutions.deleteDesc": "¿Está seguro que desea eliminar \"{name}\"? Esta acción no se puede deshacer.",
+  "institutions.updatedSuccess": "¡Institución actualizada!",
+  "institutions.addedSuccess": "¡Institución agregada!",
+  "institutions.nameRequired": "El nombre de la institución es obligatorio.",
+  "institutions.nameRequiredShort": "El nombre es obligatorio.",
+
+  // ── Document ──
+  "document.title": "Generar Documento",
+  "document.institutionHeader": "Institución / Encabezado",
+  "document.noInstitutions": "No hay instituciones registradas. Vaya a Configuración para agregar.",
+  "document.noHeader": "Sin encabezado",
+  "document.docType": "Tipo de Documento",
+  "document.prescription": "Prescripción",
+  "document.certificate": "Certificado",
+  "document.daysOff": "Días de Licencia",
+  "document.daysOffHelper": "Número de días a partir de la fecha de hoy.",
+  "document.includeCID": "Incluir CIE en el documento",
+  "document.cid": "CIE",
+  "document.cidPlaceholder": "Buscar CIE... (ej: J06, gripe)",
+  "document.print": "Imprimir / PDF",
+
+  // ── Document Preview ──
+  "document.receituario": "RECETA MÉDICA",
+  "document.atestadoMedico": "CERTIFICADO MÉDICO",
+  "document.patient": "Paciente:",
+  "document.patientAge": "Edad:",
+  "document.patientWeight": "Peso:",
+  "document.patientHeight": "Estatura:",
+  "document.patientBMI": "IMC:",
+  "document.observationsLabel": "Observaciones:",
+  "document.certificateText": "Certifico para los fines correspondientes que el/la Sr(a). {name} fue atendido(a) en esta fecha, necesitando {days} ({daysWritten}) día{plural} de licencia de sus actividades laborales y/o escolares, a partir de esta fecha.",
+  "document.cidLabel": "CIE:",
+  "document.doctorLabel": "MÉDICO",
+  "document.doctorNameDefault": "NOMBRE DEL MÉDICO",
+  "document.tel": "Tel:",
+  "document.via": "Vía",
+  "document.por": "por",
+  "document.daysWrittenOne": "uno",
+
+  // ── Logo Upload ──
+  "logoUpload.clickToUpload": "Haga clic para subir el logo",
+  "logoUpload.fileTypes": "PNG, JPG o SVG (máx. {size}KB)",
+  "logoUpload.removeLogo": "Eliminar logo",
+  "logoUpload.invalidFile": "Seleccione un archivo de imagen (PNG, JPG, SVG).",
+  "logoUpload.fileTooLarge": "La imagen debe tener como máximo {size}KB.",
+
+  // ── Phone Input ──
+  "phoneInput.placeholder": "Número de teléfono",
+  "phoneInput.searchCountry": "Buscar país...",
+  "phoneInput.noCountry": "Ningún país encontrado.",
+
+  // ── Confirm Dialog ──
+  "confirmDialog.defaultTitle": "Confirmar eliminación",
+  "confirmDialog.defaultDesc": "¿Está seguro que desea eliminar? Esta acción no se puede deshacer.",
+}
+
+export default es
