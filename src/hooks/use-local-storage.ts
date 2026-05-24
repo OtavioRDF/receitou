@@ -2,7 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react"
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  migrate?: (raw: unknown) => T
+) {
   const [storedValue, setStoredValue] = useState<T>(initialValue)
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -10,12 +14,18 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     try {
       const item = window.localStorage.getItem(key)
       if (item) {
-        setStoredValue(JSON.parse(item))
+        const parsed = JSON.parse(item)
+        const value = migrate ? migrate(parsed) : parsed
+        setStoredValue(value)
+        if (migrate) {
+          window.localStorage.setItem(key, JSON.stringify(value))
+        }
       }
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error)
     }
     setIsLoaded(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])
 
   const setValue = useCallback(

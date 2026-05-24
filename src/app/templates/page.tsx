@@ -12,18 +12,18 @@ import type { Template } from "@/types"
 
 export default function TemplatesPage() {
   const router = useRouter()
-  const { templates, isLoaded, excluir } = useTemplates()
+  const { templates, isLoaded, remove } = useTemplates()
   const { t } = useLocale()
 
-  const handleUsar = (template: Template) => {
+  const handleUse = (template: Template) => {
     const params = new URLSearchParams({ templateId: template.id })
-    router.push(`/prescricoes/nova?${params}`)
+    router.push(`/prescriptions/new?${params}`)
   }
 
   return (
     <>
       <Header title={t("templates.title")}>
-        <Link href="/templates/novo">
+        <Link href="/templates/new">
           <Button size="sm" colorPalette="blue">
             <LuPlus />
             {t("templates.new")}
@@ -38,7 +38,7 @@ export default function TemplatesPage() {
           <Text color="fg.muted" fontSize="lg">
             {t("templates.empty")}
           </Text>
-          <Link href="/templates/novo">
+          <Link href="/templates/new">
             <Button colorPalette="blue">
               <LuPlus />
               {t("templates.createFirst")}
@@ -51,8 +51,8 @@ export default function TemplatesPage() {
             <TemplateCard
               key={tmpl.id}
               template={tmpl}
-              onExcluir={excluir}
-              onUsar={handleUsar}
+              onRemove={remove}
+              onUse={handleUse}
             />
           ))}
         </VStack>

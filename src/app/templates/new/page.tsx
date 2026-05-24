@@ -7,9 +7,9 @@ import { useTemplates } from "@/hooks/use-templates"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
 
-export default function NovoTemplatePage() {
+export default function NewTemplatePage() {
   const router = useRouter()
-  const { criar } = useTemplates()
+  const { create } = useTemplates()
   const { t } = useLocale()
 
   return (
@@ -18,7 +18,7 @@ export default function NovoTemplatePage() {
       <TemplateForm
         submitLabel={t("templates.create")}
         onSubmit={(data) => {
-          criar(data)
+          create(data)
           toaster.success({ title: t("templates.createdSuccess") })
           router.push("/templates")
         }}

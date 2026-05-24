@@ -1,68 +1,68 @@
-export interface Medicamento {
+export interface Medication {
   id: string
-  nome: string
-  dosagem: string
-  via: string
-  frequencia: string
-  duracao?: string
-  observacoes?: string
+  name: string
+  dosage: string
+  route: string
+  frequency: string
+  duration?: string
+  notes?: string
 }
 
 export type WeightUnit = "kg" | "lb"
 export type HeightUnit = "cm" | "m"
 
-export interface Paciente {
-  nome: string
-  idade?: number
-  peso?: number
-  pesoUnidade?: WeightUnit
-  altura?: number
-  alturaUnidade?: HeightUnit
+export interface Patient {
+  name: string
+  age?: number
+  weight?: number
+  weightUnit?: WeightUnit
+  height?: number
+  heightUnit?: HeightUnit
 }
 
-export interface Prescricao {
+export interface Prescription {
   id: string
-  paciente: Paciente
-  medicamentos: Medicamento[]
-  observacoes?: string
+  patient: Patient
+  medications: Medication[]
+  notes?: string
   templateId?: string
-  criadoEm: string
-  atualizadoEm: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Template {
   id: string
-  nome: string
-  descricao?: string
-  medicamentos: Medicamento[]
-  observacoes?: string
-  criadoEm: string
-  atualizadoEm: string
+  name: string
+  description?: string
+  medications: Medication[]
+  notes?: string
+  createdAt: string
+  updatedAt: string
 }
 
-export interface ConfigMedico {
-  nome: string
+export interface DoctorConfig {
+  name: string
   crm: string
-  especialidade?: string
-  telefone?: string
+  specialty?: string
+  phone?: string
   email?: string
 }
 
-export interface Instituicao {
+export interface Institution {
   id: string
-  nome: string
-  endereco?: string
-  telefone?: string
+  name: string
+  address?: string
+  phone?: string
   logo?: string // base64 data URL
 }
 
 export interface CID {
-  codigo: string
-  descricao: string
+  code: string
+  description: string
 }
 
-export interface MedicamentoAPI {
-  nome: string
-  apresentacao?: string
-  laboratorio?: string
+export interface MedicationAPI {
+  name: string
+  presentation?: string
+  laboratory?: string
 }

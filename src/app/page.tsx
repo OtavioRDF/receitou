@@ -4,7 +4,7 @@ import { SimpleGrid, Box, Text, Flex, Icon } from "@chakra-ui/react"
 import { LuFileText, LuLayoutTemplate, LuPlus } from "react-icons/lu"
 import Link from "next/link"
 import { Header } from "@/components/layout/header"
-import { usePrescricoes } from "@/hooks/use-prescricoes"
+import { usePrescriptions } from "@/hooks/use-prescriptions"
 import { useTemplates } from "@/hooks/use-templates"
 import { useLocale } from "@/hooks/use-locale"
 
@@ -68,7 +68,7 @@ function QuickAction({
 }
 
 export default function Dashboard() {
-  const { prescricoes } = usePrescricoes()
+  const { prescriptions } = usePrescriptions()
   const { templates } = useTemplates()
   const { t } = useLocale()
 
@@ -79,9 +79,9 @@ export default function Dashboard() {
       <SimpleGrid columns={{ base: 1, md: 2 }} gap="6" mb="8">
         <StatCard
           label={t("dashboard.prescriptions")}
-          value={prescricoes.length}
+          value={prescriptions.length}
           icon={LuFileText}
-          href="/prescricoes"
+          href="/prescriptions"
         />
         <StatCard
           label={t("dashboard.templates")}
@@ -95,8 +95,8 @@ export default function Dashboard() {
         {t("dashboard.quickActions")}
       </Text>
       <SimpleGrid columns={{ base: 1, sm: 2 }} gap="4">
-        <QuickAction label={t("dashboard.newPrescription")} href="/prescricoes/nova" />
-        <QuickAction label={t("dashboard.newTemplate")} href="/templates/novo" />
+        <QuickAction label={t("dashboard.newPrescription")} href="/prescriptions/new" />
+        <QuickAction label={t("dashboard.newTemplate")} href="/templates/new" />
       </SimpleGrid>
     </>
   )

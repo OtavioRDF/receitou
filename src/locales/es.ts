@@ -121,7 +121,21 @@ const es: Record<TranslationKey, string> = {
   "medications.dosage": "Dosis",
   "medications.dosagePlaceholder": "Ej: 500mg",
   "medications.route": "Vía",
-  "medications.routePlaceholder": "Ej: Oral",
+  "medications.routeSelect": "Seleccione la vía",
+  "medications.routeOral": "Oral",
+  "medications.routeSublingual": "Sublingual",
+  "medications.routeIntravenous": "Intravenosa",
+  "medications.routeIntramuscular": "Intramuscular",
+  "medications.routeSubcutaneous": "Subcutánea",
+  "medications.routeTopical": "Tópica",
+  "medications.routeRectal": "Rectal",
+  "medications.routeInhalation": "Inhalatoria",
+  "medications.routeNasal": "Nasal",
+  "medications.routeOphthalmic": "Oftálmica",
+  "medications.routeOtic": "Ótica",
+  "medications.routeTransdermal": "Transdérmica",
+  "medications.routeVaginal": "Vaginal",
+  "medications.routeIntradermal": "Intradérmica",
   "medications.frequency": "Frecuencia",
   "medications.frequencyPlaceholder": "Ej: 8/8h",
   "medications.duration": "Duración",
@@ -183,6 +197,7 @@ const es: Record<TranslationKey, string> = {
   "document.docType": "Tipo de Documento",
   "document.prescription": "Prescripción",
   "document.certificate": "Certificado",
+  "document.declaration": "Declaración",
   "document.daysOff": "Días de Licencia",
   "document.daysOffHelper": "Número de días a partir de la fecha de hoy.",
   "document.includeCID": "Incluir CIE en el documento",
@@ -207,6 +222,10 @@ const es: Record<TranslationKey, string> = {
   "document.via": "Vía",
   "document.por": "por",
   "document.daysWrittenOne": "uno",
+  "document.declaracaoAtendimento": "DECLARACIÓN DE ATENCIÓN",
+  "document.declaracaoText": "Declaro para los fines correspondientes que el/la Sr(a). {name} fue atendido(a) en esta fecha en {institution}, bajo los cuidados del/la {doctor}.",
+  "document.declaracaoTextNoInst": "Declaro para los fines correspondientes que el/la Sr(a). {name} fue atendido(a) en esta fecha, bajo los cuidados del/la {doctor}.",
+  "document.declaracaoPurpose": "La presente declaración se expide para los fines que sean necesarios.",
 
   // ── Logo Upload ──
   "logoUpload.clickToUpload": "Haga clic para subir el logo",
@@ -219,6 +238,15 @@ const es: Record<TranslationKey, string> = {
   "phoneInput.placeholder": "Número de teléfono",
   "phoneInput.searchCountry": "Buscar país...",
   "phoneInput.noCountry": "Ningún país encontrado.",
+
+  // ── Confirm Dialog ──
+  // ── Prescriptions List ──
+  "prescriptions.searchPlaceholder": "Buscar por paciente...",
+  "prescriptions.sortNewest": "Más recientes",
+  "prescriptions.sortOldest": "Más antiguas",
+  "prescriptions.duplicate": "Duplicar prescripción",
+  "prescriptions.duplicatedSuccess": "¡Prescripción duplicada!",
+  "prescriptions.noResults": "Ninguna prescripción encontrada para \"{term}\".",
 
   // ── Confirm Dialog ──
   "confirmDialog.defaultTitle": "Confirmar eliminación",

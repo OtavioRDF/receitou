@@ -1,15 +1,15 @@
-import type { MedicamentoAPI } from "@/types"
+import type { MedicationAPI } from "@/types"
 
 const ANVISA_BASE_URL = "https://bula.vercel.app/pesquisar"
 
-export async function buscarMedicamentos(
-  termo: string
-): Promise<MedicamentoAPI[]> {
-  if (termo.trim().length < 3) return []
+export async function searchMedications(
+  term: string
+): Promise<MedicationAPI[]> {
+  if (term.trim().length < 3) return []
 
   try {
     const res = await fetch(
-      `${ANVISA_BASE_URL}?nome=${encodeURIComponent(termo)}`
+      `${ANVISA_BASE_URL}?nome=${encodeURIComponent(term)}`
     )
 
     if (!res.ok) return []
@@ -18,8 +18,8 @@ export async function buscarMedicamentos(
 
     return data.content?.map(
       (item: { nomeProduto: string; razaoSocial: string }) => ({
-        nome: item.nomeProduto,
-        laboratorio: item.razaoSocial,
+        name: item.nomeProduto,
+        laboratory: item.razaoSocial,
       })
     ) ?? []
   } catch {

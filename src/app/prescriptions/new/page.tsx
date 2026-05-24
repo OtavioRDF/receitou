@@ -4,49 +4,49 @@ import { Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Text } from "@chakra-ui/react"
 import { Header } from "@/components/layout/header"
-import { PrescricaoForm } from "@/components/prescricao/prescricao-form"
-import { usePrescricoes } from "@/hooks/use-prescricoes"
+import { PrescriptionForm } from "@/components/prescricao/prescription-form"
+import { usePrescriptions } from "@/hooks/use-prescriptions"
 import { useTemplates } from "@/hooks/use-templates"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
 
-function NovaPrescricaoContent() {
+function NewPrescriptionContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { criar } = usePrescricoes()
-  const { buscarPorId } = useTemplates()
+  const { create } = usePrescriptions()
+  const { findById } = useTemplates()
   const { t } = useLocale()
 
   const templateId = searchParams.get("templateId")
-  const template = templateId ? buscarPorId(templateId) : undefined
+  const template = templateId ? findById(templateId) : undefined
 
   return (
     <>
       <Header
         title={
           template
-            ? t("prescriptions.newFromTemplate", { name: template.nome })
+            ? t("prescriptions.newFromTemplate", { name: template.name })
             : t("prescriptions.newTitle")
         }
       />
-      <PrescricaoForm
-        initialMedicamentos={template?.medicamentos}
-        initialObservacoes={template?.observacoes}
+      <PrescriptionForm
+        initialMedications={template?.medications}
+        initialNotes={template?.notes}
         submitLabel={t("prescriptions.create")}
         onSubmit={(data) => {
-          criar({ ...data, templateId: templateId ?? undefined })
+          create({ ...data, templateId: templateId ?? undefined })
           toaster.success({ title: t("prescriptions.createdSuccess") })
-          router.push("/prescricoes")
+          router.push("/prescriptions")
         }}
       />
     </>
   )
 }
 
-export default function NovaPrescricaoPage() {
+export default function NewPrescriptionPage() {
   return (
     <Suspense fallback={<Text color="fg.muted">...</Text>}>
-      <NovaPrescricaoContent />
+      <NewPrescriptionContent />
     </Suspense>
   )
 }

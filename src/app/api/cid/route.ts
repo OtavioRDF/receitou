@@ -10,19 +10,20 @@ const cids: CIDEntry[] = cidData as CIDEntry[]
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const termo = searchParams.get("q")?.toLowerCase().trim()
+  const term = searchParams.get("q")?.toLowerCase().trim()
 
-  if (!termo || termo.length < 2) {
+  if (!term || term.length < 2) {
     return NextResponse.json([])
   }
 
-  const resultados = cids
+  const results = cids
     .filter(
       (cid) =>
-        cid.codigo.toLowerCase().includes(termo) ||
-        cid.descricao.toLowerCase().includes(termo)
+        cid.codigo.toLowerCase().includes(term) ||
+        cid.descricao.toLowerCase().includes(term)
     )
     .slice(0, 15)
+    .map((cid) => ({ code: cid.codigo, description: cid.descricao }))
 
-  return NextResponse.json(resultados)
+  return NextResponse.json(results)
 }

@@ -13,40 +13,40 @@ import {
 } from "@chakra-ui/react"
 import { Field } from "@chakra-ui/react"
 import { LuPrinter, LuFileText } from "react-icons/lu"
-import { buscarCID } from "@/data/cid-10"
+import { searchCID } from "@/data/cid-10"
 import { useState, useRef } from "react"
-import type { CID, Instituicao } from "@/types"
+import type { CID, Institution } from "@/types"
 import { useLocale } from "@/hooks/use-locale"
 
-interface DocumentoConfigProps {
-  tipo: "prescricao" | "atestado"
-  onTipoChange: (tipo: "prescricao" | "atestado") => void
-  diasAfastamento: number
-  onDiasChange: (dias: number) => void
-  incluirCID: boolean
-  onIncluirCIDChange: (incluir: boolean) => void
+interface DocumentConfigProps {
+  type: "prescricao" | "atestado" | "declaracao"
+  onTypeChange: (type: "prescricao" | "atestado" | "declaracao") => void
+  daysOff: number
+  onDaysChange: (days: number) => void
+  includeCID: boolean
+  onIncludeCIDChange: (include: boolean) => void
   cid: string
   onCIDChange: (cid: string) => void
-  onImprimir: () => void
-  instituicoes: Instituicao[]
-  instituicaoId: string | null
-  onInstituicaoChange: (id: string | null) => void
+  onPrint: () => void
+  institutions: Institution[]
+  institutionId: string | null
+  onInstitutionChange: (id: string | null) => void
 }
 
-export function DocumentoConfig({
-  tipo,
-  onTipoChange,
-  diasAfastamento,
-  onDiasChange,
-  incluirCID,
-  onIncluirCIDChange,
+export function DocumentConfig({
+  type,
+  onTypeChange,
+  daysOff,
+  onDaysChange,
+  includeCID,
+  onIncludeCIDChange,
   cid,
   onCIDChange,
-  onImprimir,
-  instituicoes,
-  instituicaoId,
-  onInstituicaoChange,
-}: DocumentoConfigProps) {
+  onPrint,
+  institutions,
+  institutionId,
+  onInstitutionChange,
+}: DocumentConfigProps) {
   const { t } = useLocale()
   const [cidSearch, setCidSearch] = useState("")
   const [cidResults, setCidResults] = useState<CID[]>([])
@@ -66,7 +66,7 @@ export function DocumentoConfig({
 
     setIsSearching(true)
     debounceRef.current = setTimeout(async () => {
-      const results = await buscarCID(term)
+      const results = await searchCID(term)
       setCidResults(results)
       setShowCidResults(results.length > 0)
       setIsSearching(false)
@@ -75,36 +75,35 @@ export function DocumentoConfig({
 
   return (
     <VStack gap="6" align="stretch">
-      {/* Instituição / Cabeçalho */}
+      {/* Institution / Header */}
       <Box>
         <Heading size="sm" mb="3">
           {t("document.institutionHeader")}
         </Heading>
 
-        {instituicoes.length === 0 ? (
+        {institutions.length === 0 ? (
           <Text fontSize="sm" color="fg.muted">
             {t("document.noInstitutions")}
           </Text>
         ) : (
           <VStack gap="2" align="stretch">
-            {/* Opção sem instituição */}
             <Box
               px="3"
               py="2"
               borderWidth="1px"
               borderRadius="md"
               cursor="pointer"
-              bg={instituicaoId === null ? "blue.50" : "transparent"}
-              borderColor={instituicaoId === null ? "blue.400" : "border"}
-              _hover={{ bg: instituicaoId === null ? "blue.50" : "bg.muted" }}
-              onClick={() => onInstituicaoChange(null)}
+              bg={institutionId === null ? "blue.50" : "transparent"}
+              borderColor={institutionId === null ? "blue.400" : "border"}
+              _hover={{ bg: institutionId === null ? "blue.50" : "bg.muted" }}
+              onClick={() => onInstitutionChange(null)}
             >
-              <Text fontSize="sm" color={instituicaoId === null ? "blue.700" : "fg.muted"}>
+              <Text fontSize="sm" color={institutionId === null ? "blue.700" : "fg.muted"}>
                 {t("document.noHeader")}
               </Text>
             </Box>
 
-            {instituicoes.map((inst) => (
+            {institutions.map((inst) => (
               <Flex
                 key={inst.id}
                 align="center"
@@ -114,15 +113,15 @@ export function DocumentoConfig({
                 borderWidth="1px"
                 borderRadius="md"
                 cursor="pointer"
-                bg={instituicaoId === inst.id ? "blue.50" : "transparent"}
-                borderColor={instituicaoId === inst.id ? "blue.400" : "border"}
-                _hover={{ bg: instituicaoId === inst.id ? "blue.50" : "bg.muted" }}
-                onClick={() => onInstituicaoChange(inst.id)}
+                bg={institutionId === inst.id ? "blue.50" : "transparent"}
+                borderColor={institutionId === inst.id ? "blue.400" : "border"}
+                _hover={{ bg: institutionId === inst.id ? "blue.50" : "bg.muted" }}
+                onClick={() => onInstitutionChange(inst.id)}
               >
                 {inst.logo && (
                   <Image
                     src={inst.logo}
-                    alt={inst.nome}
+                    alt={inst.name}
                     maxH="30px"
                     maxW="60px"
                     objectFit="contain"
@@ -131,11 +130,11 @@ export function DocumentoConfig({
                 )}
                 <Text
                   fontSize="sm"
-                  fontWeight={instituicaoId === inst.id ? "semibold" : "normal"}
-                  color={instituicaoId === inst.id ? "blue.700" : "fg"}
+                  fontWeight={institutionId === inst.id ? "semibold" : "normal"}
+                  color={institutionId === inst.id ? "blue.700" : "fg"}
                   truncate
                 >
-                  {inst.nome}
+                  {inst.name}
                 </Text>
               </Flex>
             ))}
@@ -145,17 +144,17 @@ export function DocumentoConfig({
 
       <Separator />
 
-      {/* Tipo de Documento */}
+      {/* Document Type */}
       <Box>
         <Heading size="sm" mb="3">
           {t("document.docType")}
         </Heading>
-        <Flex gap="2">
+        <Flex gap="2" flexWrap="wrap">
           <Button
             flex="1"
-            variant={tipo === "prescricao" ? "solid" : "outline"}
-            colorPalette={tipo === "prescricao" ? "blue" : "gray"}
-            onClick={() => onTipoChange("prescricao")}
+            variant={type === "prescricao" ? "solid" : "outline"}
+            colorPalette={type === "prescricao" ? "blue" : "gray"}
+            onClick={() => onTypeChange("prescricao")}
             size="sm"
           >
             <LuFileText />
@@ -163,26 +162,36 @@ export function DocumentoConfig({
           </Button>
           <Button
             flex="1"
-            variant={tipo === "atestado" ? "solid" : "outline"}
-            colorPalette={tipo === "atestado" ? "blue" : "gray"}
-            onClick={() => onTipoChange("atestado")}
+            variant={type === "atestado" ? "solid" : "outline"}
+            colorPalette={type === "atestado" ? "blue" : "gray"}
+            onClick={() => onTypeChange("atestado")}
             size="sm"
           >
             <LuFileText />
             {t("document.certificate")}
           </Button>
+          <Button
+            flex="1"
+            variant={type === "declaracao" ? "solid" : "outline"}
+            colorPalette={type === "declaracao" ? "blue" : "gray"}
+            onClick={() => onTypeChange("declaracao")}
+            size="sm"
+          >
+            <LuFileText />
+            {t("document.declaration")}
+          </Button>
         </Flex>
       </Box>
 
-      {tipo === "atestado" && (
+      {type === "atestado" && (
         <>
           <Field.Root>
             <Field.Label>{t("document.daysOff")}</Field.Label>
             <Input
               type="number"
               min={1}
-              value={diasAfastamento}
-              onChange={(e) => onDiasChange(Number(e.target.value) || 1)}
+              value={daysOff}
+              onChange={(e) => onDaysChange(Number(e.target.value) || 1)}
             />
             <Field.HelperText>
               {t("document.daysOffHelper")}
@@ -192,14 +201,14 @@ export function DocumentoConfig({
           <Flex align="center" gap="2">
             <input
               type="checkbox"
-              id="incluir-cid"
-              checked={incluirCID}
-              onChange={(e) => onIncluirCIDChange(e.target.checked)}
+              id="include-cid"
+              checked={includeCID}
+              onChange={(e) => onIncludeCIDChange(e.target.checked)}
             />
-            <label htmlFor="incluir-cid">{t("document.includeCID")}</label>
+            <label htmlFor="include-cid">{t("document.includeCID")}</label>
           </Flex>
 
-          {incluirCID && (
+          {includeCID && (
             <Box position="relative">
               <Field.Root>
                 <Field.Label>{t("document.cid")}</Field.Label>
@@ -231,19 +240,19 @@ export function DocumentoConfig({
                 >
                   {cidResults.map((c) => (
                     <Box
-                      key={c.codigo}
+                      key={c.code}
                       px="3"
                       py="2"
                       cursor="pointer"
                       _hover={{ bg: "bg.muted" }}
                       fontSize="sm"
                       onClick={() => {
-                        onCIDChange(`${c.codigo} - ${c.descricao}`)
+                        onCIDChange(`${c.code} - ${c.description}`)
                         setCidSearch("")
                         setShowCidResults(false)
                       }}
                     >
-                      <strong>{c.codigo}</strong> — {c.descricao}
+                      <strong>{c.code}</strong> — {c.description}
                     </Box>
                   ))}
                 </Box>
@@ -254,7 +263,7 @@ export function DocumentoConfig({
       )}
 
       <Flex gap="3" mt="4">
-        <Button colorPalette="blue" onClick={onImprimir} flex="1">
+        <Button colorPalette="blue" onClick={onPrint} flex="1">
           <LuPrinter />
           {t("document.print")}
         </Button>

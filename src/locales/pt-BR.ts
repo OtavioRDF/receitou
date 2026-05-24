@@ -119,7 +119,21 @@ const ptBR = {
   "medications.dosage": "Dosagem",
   "medications.dosagePlaceholder": "Ex: 500mg",
   "medications.route": "Via",
-  "medications.routePlaceholder": "Ex: Oral",
+  "medications.routeSelect": "Selecione a via",
+  "medications.routeOral": "Oral",
+  "medications.routeSublingual": "Sublingual",
+  "medications.routeIntravenous": "Intravenosa",
+  "medications.routeIntramuscular": "Intramuscular",
+  "medications.routeSubcutaneous": "Subcutânea",
+  "medications.routeTopical": "Tópica",
+  "medications.routeRectal": "Retal",
+  "medications.routeInhalation": "Inalatória",
+  "medications.routeNasal": "Nasal",
+  "medications.routeOphthalmic": "Oftálmica",
+  "medications.routeOtic": "Otológica",
+  "medications.routeTransdermal": "Transdérmica",
+  "medications.routeVaginal": "Vaginal",
+  "medications.routeIntradermal": "Intradérmica",
   "medications.frequency": "Frequência",
   "medications.frequencyPlaceholder": "Ex: 8/8h",
   "medications.duration": "Duração",
@@ -181,6 +195,7 @@ const ptBR = {
   "document.docType": "Tipo de Documento",
   "document.prescription": "Prescrição",
   "document.certificate": "Atestado",
+  "document.declaration": "Declaração",
   "document.daysOff": "Dias de Afastamento",
   "document.daysOffHelper": "Número de dias a partir da data de hoje.",
   "document.includeCID": "Incluir CID no documento",
@@ -205,6 +220,10 @@ const ptBR = {
   "document.via": "Via",
   "document.por": "por",
   "document.daysWrittenOne": "um",
+  "document.declaracaoAtendimento": "DECLARAÇÃO DE ATENDIMENTO",
+  "document.declaracaoText": "Declaro para os devidos fins que o(a) Sr(a). {name} foi atendido(a) nesta data no(a) {institution}, sob os cuidados do(a) {doctor}.",
+  "document.declaracaoTextNoInst": "Declaro para os devidos fins que o(a) Sr(a). {name} foi atendido(a) nesta data, sob os cuidados do(a) {doctor}.",
+  "document.declaracaoPurpose": "A presente declaração é expedida para os fins que se fizerem necessários.",
 
   // ── Logo Upload ──
   "logoUpload.clickToUpload": "Clique para enviar o logo",
@@ -217,6 +236,15 @@ const ptBR = {
   "phoneInput.placeholder": "Número de telefone",
   "phoneInput.searchCountry": "Buscar país...",
   "phoneInput.noCountry": "Nenhum país encontrado.",
+
+  // ── Confirm Dialog ──
+  // ── Prescriptions List ──
+  "prescriptions.searchPlaceholder": "Buscar por paciente...",
+  "prescriptions.sortNewest": "Mais recentes",
+  "prescriptions.sortOldest": "Mais antigas",
+  "prescriptions.duplicate": "Duplicar prescrição",
+  "prescriptions.duplicatedSuccess": "Prescrição duplicada!",
+  "prescriptions.noResults": "Nenhuma prescrição encontrada para \"{term}\".",
 
   // ── Confirm Dialog ──
   "confirmDialog.defaultTitle": "Confirmar exclusão",

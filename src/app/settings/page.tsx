@@ -17,45 +17,45 @@ import { Field } from "@chakra-ui/react"
 import { LuPlus, LuPencil, LuTrash2 } from "react-icons/lu"
 import { Header } from "@/components/layout/header"
 import { useConfig } from "@/hooks/use-config"
-import { useInstituicoes } from "@/hooks/use-instituicoes"
+import { useInstitutions } from "@/hooks/use-institutions"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { LogoUpload } from "@/components/ui/logo-upload"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
-import type { ConfigMedico, Instituicao } from "@/types"
+import type { DoctorConfig, Institution } from "@/types"
 import { useState, useEffect } from "react"
 
-// ── Validação do profissional ──
+// ── Professional validation ──
 
-type FormErrors = Partial<Record<keyof ConfigMedico, string>>
+type FormErrors = Partial<Record<keyof DoctorConfig, string>>
 
-// ── Formulário de Instituição (modal inline) ──
+// ── Institution Form (inline) ──
 
-interface InstituicaoFormProps {
-  initial?: Instituicao
-  onSave: (data: Omit<Instituicao, "id">) => void
+interface InstitutionFormProps {
+  initial?: Institution
+  onSave: (data: Omit<Institution, "id">) => void
   onCancel: () => void
 }
 
-function InstituicaoForm({ initial, onSave, onCancel }: InstituicaoFormProps) {
+function InstitutionForm({ initial, onSave, onCancel }: InstitutionFormProps) {
   const { t } = useLocale()
-  const [nome, setNome] = useState(initial?.nome ?? "")
-  const [endereco, setEndereco] = useState(initial?.endereco ?? "")
-  const [telefone, setTelefone] = useState(initial?.telefone ?? "")
+  const [name, setName] = useState(initial?.name ?? "")
+  const [address, setAddress] = useState(initial?.address ?? "")
+  const [phone, setPhone] = useState(initial?.phone ?? "")
   const [logo, setLogo] = useState<string | undefined>(initial?.logo)
-  const [nomeError, setNomeError] = useState("")
+  const [nameError, setNameError] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!nome.trim()) {
-      setNomeError(t("institutions.nameRequired"))
+    if (!name.trim()) {
+      setNameError(t("institutions.nameRequired"))
       return
     }
     onSave({
-      nome,
-      endereco: endereco || undefined,
-      telefone: telefone || undefined,
+      name,
+      address: address || undefined,
+      phone: phone || undefined,
       logo,
     })
   }
@@ -74,36 +74,36 @@ function InstituicaoForm({ initial, onSave, onCancel }: InstituicaoFormProps) {
           </Field.Root>
 
           <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
-            <Field.Root required invalid={!!nomeError}>
+            <Field.Root required invalid={!!nameError}>
               <Field.Label>{t("institutions.name")}</Field.Label>
               <Input
                 placeholder={t("institutions.namePlaceholder")}
-                value={nome}
+                value={name}
                 onChange={(e) => {
-                  setNome(e.target.value)
-                  if (nomeError) setNomeError("")
+                  setName(e.target.value)
+                  if (nameError) setNameError("")
                 }}
                 onBlur={() => {
-                  if (!nome.trim()) setNomeError(t("institutions.nameRequiredShort"))
+                  if (!name.trim()) setNameError(t("institutions.nameRequiredShort"))
                 }}
               />
-              {nomeError && (
-                <Field.ErrorText>{nomeError}</Field.ErrorText>
+              {nameError && (
+                <Field.ErrorText>{nameError}</Field.ErrorText>
               )}
             </Field.Root>
             <Field.Root>
               <Field.Label>{t("institutions.address")}</Field.Label>
               <Input
                 placeholder={t("institutions.addressPlaceholder")}
-                value={endereco}
-                onChange={(e) => setEndereco(e.target.value)}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </Field.Root>
             <Field.Root>
               <Field.Label>{t("common.phone")}</Field.Label>
               <PhoneInput
-                value={telefone}
-                onChange={setTelefone}
+                value={phone}
+                onChange={setPhone}
               />
             </Field.Root>
           </SimpleGrid>
@@ -127,41 +127,41 @@ function InstituicaoForm({ initial, onSave, onCancel }: InstituicaoFormProps) {
   )
 }
 
-// ── Página principal ──
+// ── Main Page ──
 
-export default function ConfiguracoesPage() {
+export default function SettingsPage() {
   const { config, setConfig, isLoaded } = useConfig()
   const {
-    instituicoes,
+    institutions,
     isLoaded: instLoaded,
-    criar: criarInst,
-    atualizar: atualizarInst,
-    excluir: excluirInst,
-  } = useInstituicoes()
+    create: createInst,
+    update: updateInst,
+    remove: removeInst,
+  } = useInstitutions()
   const { t } = useLocale()
 
-  const [form, setForm] = useState<ConfigMedico>(config)
+  const [form, setForm] = useState<DoctorConfig>(config)
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<
-    Partial<Record<keyof ConfigMedico, boolean>>
+    Partial<Record<keyof DoctorConfig, boolean>>
   >({})
 
-  // Instituição state
+  // Institution state
   const [showInstForm, setShowInstForm] = useState(false)
-  const [editingInst, setEditingInst] = useState<Instituicao | undefined>()
+  const [editingInst, setEditingInst] = useState<Institution | undefined>()
   const [deleteInstId, setDeleteInstId] = useState<string | null>(null)
 
   useEffect(() => {
     if (isLoaded) setForm(config)
   }, [isLoaded, config])
 
-  function validate(form: ConfigMedico): FormErrors {
+  function validate(form: DoctorConfig): FormErrors {
     const errors: FormErrors = {}
 
-    if (!form.nome.trim()) {
-      errors.nome = t("validation.nameRequired")
-    } else if (form.nome.trim().length < 3) {
-      errors.nome = t("validation.nameMin3")
+    if (!form.name.trim()) {
+      errors.name = t("validation.nameRequired")
+    } else if (form.name.trim().length < 3) {
+      errors.name = t("validation.nameMin3")
     }
 
     if (!form.crm.trim()) {
@@ -176,8 +176,8 @@ export default function ConfiguracoesPage() {
       errors.email = t("validation.emailInvalid")
     }
 
-    if (form.telefone && form.telefone.replace(/\D/g, "").length < 8) {
-      errors.telefone = t("validation.phoneMin")
+    if (form.phone && form.phone.replace(/\D/g, "").length < 8) {
+      errors.phone = t("validation.phoneMin")
     }
 
     return errors
@@ -187,7 +187,7 @@ export default function ConfiguracoesPage() {
     if (Object.keys(touched).length > 0) {
       const allErrors = validate(form)
       const visibleErrors: FormErrors = {}
-      for (const key of Object.keys(touched) as (keyof ConfigMedico)[]) {
+      for (const key of Object.keys(touched) as (keyof DoctorConfig)[]) {
         if (touched[key] && allErrors[key]) {
           visibleErrors[key] = allErrors[key]
         }
@@ -197,19 +197,19 @@ export default function ConfiguracoesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, touched])
 
-  const handleChange = (field: keyof ConfigMedico, value: string) => {
+  const handleChange = (field: keyof DoctorConfig, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleBlur = (field: keyof ConfigMedico) => {
+  const handleBlur = (field: keyof DoctorConfig) => {
     setTouched((prev) => ({ ...prev, [field]: true }))
   }
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const allTouched: Partial<Record<keyof ConfigMedico, boolean>> = {}
-    for (const key of Object.keys(form) as (keyof ConfigMedico)[]) {
+    const allTouched: Partial<Record<keyof DoctorConfig, boolean>> = {}
+    for (const key of Object.keys(form) as (keyof DoctorConfig)[]) {
       allTouched[key] = true
     }
     setTouched(allTouched)
@@ -225,12 +225,12 @@ export default function ConfiguracoesPage() {
     toaster.success({ title: t("settings.savedSuccess") })
   }
 
-  const handleInstSave = (data: Omit<Instituicao, "id">) => {
+  const handleInstSave = (data: Omit<Institution, "id">) => {
     if (editingInst) {
-      atualizarInst(editingInst.id, data)
+      updateInst(editingInst.id, data)
       toaster.success({ title: t("institutions.updatedSuccess") })
     } else {
-      criarInst(data)
+      createInst(data)
       toaster.success({ title: t("institutions.addedSuccess") })
     }
     setShowInstForm(false)
@@ -240,7 +240,7 @@ export default function ConfiguracoesPage() {
   if (!isLoaded || !instLoaded) return null
 
   const instToDelete = deleteInstId
-    ? instituicoes.find((i) => i.id === deleteInstId)
+    ? institutions.find((i) => i.id === deleteInstId)
     : null
 
   return (
@@ -248,22 +248,22 @@ export default function ConfiguracoesPage() {
       <Header title={t("settings.title")} />
 
       <VStack gap="10" align="stretch" maxW="800px">
-        {/* ── Dados do Profissional ── */}
+        {/* ── Professional Data ── */}
         <form onSubmit={handleSave} noValidate>
           <VStack gap="6" align="stretch">
             <Heading size="md">{t("settings.professional")}</Heading>
 
             <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
-              <Field.Root required invalid={!!errors.nome}>
+              <Field.Root required invalid={!!errors.name}>
                 <Field.Label>{t("settings.fullName")}</Field.Label>
                 <Input
                   placeholder={t("settings.fullNamePlaceholder")}
-                  value={form.nome}
-                  onChange={(e) => handleChange("nome", e.target.value)}
-                  onBlur={() => handleBlur("nome")}
+                  value={form.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  onBlur={() => handleBlur("name")}
                 />
-                {errors.nome && (
-                  <Field.ErrorText>{errors.nome}</Field.ErrorText>
+                {errors.name && (
+                  <Field.ErrorText>{errors.name}</Field.ErrorText>
                 )}
               </Field.Root>
 
@@ -284,21 +284,21 @@ export default function ConfiguracoesPage() {
                 <Field.Label>{t("settings.specialty")}</Field.Label>
                 <Input
                   placeholder={t("settings.specialtyPlaceholder")}
-                  value={form.especialidade ?? ""}
+                  value={form.specialty ?? ""}
                   onChange={(e) =>
-                    handleChange("especialidade", e.target.value)
+                    handleChange("specialty", e.target.value)
                   }
                 />
               </Field.Root>
 
-              <Field.Root invalid={!!errors.telefone}>
+              <Field.Root invalid={!!errors.phone}>
                 <Field.Label>{t("common.phone")}</Field.Label>
                 <PhoneInput
-                  value={form.telefone ?? ""}
-                  onChange={(phone) => handleChange("telefone", phone)}
+                  value={form.phone ?? ""}
+                  onChange={(p) => handleChange("phone", p)}
                 />
-                {errors.telefone && (
-                  <Field.ErrorText>{errors.telefone}</Field.ErrorText>
+                {errors.phone && (
+                  <Field.ErrorText>{errors.phone}</Field.ErrorText>
                 )}
               </Field.Root>
 
@@ -329,7 +329,7 @@ export default function ConfiguracoesPage() {
 
         <Separator />
 
-        {/* ── Instituições / Cabeçalhos ── */}
+        {/* ── Institutions ── */}
         <Box>
           <Flex justify="space-between" align="center" mb="4">
             <Heading size="md">{t("institutions.title")}</Heading>
@@ -349,9 +349,8 @@ export default function ConfiguracoesPage() {
           </Flex>
 
           <VStack gap="4" align="stretch">
-            {/* Form de criação/edição */}
             {showInstForm && (
-              <InstituicaoForm
+              <InstitutionForm
                 initial={editingInst}
                 onSave={handleInstSave}
                 onCancel={() => {
@@ -361,14 +360,13 @@ export default function ConfiguracoesPage() {
               />
             )}
 
-            {/* Lista de instituições */}
-            {instituicoes.length === 0 && !showInstForm && (
+            {institutions.length === 0 && !showInstForm && (
               <Text color="fg.muted" fontSize="sm">
                 {t("institutions.empty")}
               </Text>
             )}
 
-            {instituicoes.map((inst) => (
+            {institutions.map((inst) => (
               <Box
                 key={inst.id}
                 p="4"
@@ -381,7 +379,7 @@ export default function ConfiguracoesPage() {
                   {inst.logo && (
                     <Image
                       src={inst.logo}
-                      alt={inst.nome}
+                      alt={inst.name}
                       maxH="50px"
                       maxW="120px"
                       objectFit="contain"
@@ -389,15 +387,15 @@ export default function ConfiguracoesPage() {
                     />
                   )}
                   <Box flex="1" minW="0">
-                    <Text fontWeight="semibold">{inst.nome}</Text>
-                    {inst.endereco && (
+                    <Text fontWeight="semibold">{inst.name}</Text>
+                    {inst.address && (
                       <Text fontSize="sm" color="fg.muted" truncate>
-                        {inst.endereco}
+                        {inst.address}
                       </Text>
                     )}
-                    {inst.telefone && (
+                    {inst.phone && (
                       <Text fontSize="sm" color="fg.muted">
-                        {inst.telefone}
+                        {inst.phone}
                       </Text>
                     )}
                   </Box>
@@ -434,10 +432,10 @@ export default function ConfiguracoesPage() {
         open={!!deleteInstId}
         onClose={() => setDeleteInstId(null)}
         onConfirm={() => {
-          if (deleteInstId) excluirInst(deleteInstId)
+          if (deleteInstId) removeInst(deleteInstId)
         }}
         title={t("institutions.deleteTitle")}
-        description={t("institutions.deleteDesc", { name: instToDelete?.nome ?? "" })}
+        description={t("institutions.deleteDesc", { name: instToDelete?.name ?? "" })}
       />
     </>
   )

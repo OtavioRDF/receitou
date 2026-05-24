@@ -4,19 +4,19 @@ import { use } from "react"
 import { useRouter } from "next/navigation"
 import { Text } from "@chakra-ui/react"
 import { Header } from "@/components/layout/header"
-import { PrescricaoForm } from "@/components/prescricao/prescricao-form"
-import { usePrescricoes } from "@/hooks/use-prescricoes"
+import { PrescriptionForm } from "@/components/prescricao/prescription-form"
+import { usePrescriptions } from "@/hooks/use-prescriptions"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
 
-export default function EditarPrescricaoPage({
+export default function EditPrescriptionPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = use(params)
   const router = useRouter()
-  const { buscarPorId, atualizar, isLoaded } = usePrescricoes()
+  const { findById, update, isLoaded } = usePrescriptions()
   const { t } = useLocale()
 
   if (!isLoaded) {
@@ -28,9 +28,9 @@ export default function EditarPrescricaoPage({
     )
   }
 
-  const prescricao = buscarPorId(id)
+  const prescription = findById(id)
 
-  if (!prescricao) {
+  if (!prescription) {
     return (
       <>
         <Header title={t("prescriptions.notFound")} />
@@ -44,15 +44,15 @@ export default function EditarPrescricaoPage({
   return (
     <>
       <Header title={t("prescriptions.editTitle")} />
-      <PrescricaoForm
-        initialPaciente={prescricao.paciente}
-        initialMedicamentos={prescricao.medicamentos}
-        initialObservacoes={prescricao.observacoes}
+      <PrescriptionForm
+        initialPatient={prescription.patient}
+        initialMedications={prescription.medications}
+        initialNotes={prescription.notes}
         submitLabel={t("prescriptions.saveChanges")}
         onSubmit={(data) => {
-          atualizar(id, data)
+          update(id, data)
           toaster.success({ title: t("prescriptions.updatedSuccess") })
-          router.push("/prescricoes")
+          router.push("/prescriptions")
         }}
       />
     </>

@@ -9,14 +9,14 @@ import { useTemplates } from "@/hooks/use-templates"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
 
-export default function EditarTemplatePage({
+export default function EditTemplatePage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = use(params)
   const router = useRouter()
-  const { buscarPorId, atualizar, isLoaded } = useTemplates()
+  const { findById, update, isLoaded } = useTemplates()
   const { t } = useLocale()
 
   if (!isLoaded) {
@@ -28,7 +28,7 @@ export default function EditarTemplatePage({
     )
   }
 
-  const template = buscarPorId(id)
+  const template = findById(id)
 
   if (!template) {
     return (
@@ -45,13 +45,13 @@ export default function EditarTemplatePage({
     <>
       <Header title={t("templates.editTitle")} />
       <TemplateForm
-        initialNome={template.nome}
-        initialDescricao={template.descricao}
-        initialMedicamentos={template.medicamentos}
-        initialObservacoes={template.observacoes}
+        initialName={template.name}
+        initialDescription={template.description}
+        initialMedications={template.medications}
+        initialNotes={template.notes}
         submitLabel={t("templates.saveChanges")}
         onSubmit={(data) => {
-          atualizar(id, data)
+          update(id, data)
           toaster.success({ title: t("templates.updatedSuccess") })
           router.push("/templates")
         }}

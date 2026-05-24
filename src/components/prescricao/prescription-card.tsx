@@ -2,21 +2,22 @@
 
 import { useState } from "react"
 import { Box, Flex, Text, IconButton, Badge } from "@chakra-ui/react"
-import { LuTrash2, LuPencil, LuPrinter } from "react-icons/lu"
+import { LuTrash2, LuPencil, LuPrinter, LuCopy } from "react-icons/lu"
 import Link from "next/link"
-import type { Prescricao } from "@/types"
+import type { Prescription } from "@/types"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { useLocale } from "@/hooks/use-locale"
 
-interface PrescricaoCardProps {
-  prescricao: Prescricao
-  onExcluir: (id: string) => void
+interface PrescriptionCardProps {
+  prescription: Prescription
+  onRemove: (id: string) => void
+  onDuplicate?: (id: string) => void
 }
 
-export function PrescricaoCard({ prescricao, onExcluir }: PrescricaoCardProps) {
+export function PrescriptionCard({ prescription, onRemove, onDuplicate }: PrescriptionCardProps) {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const { t, locale } = useLocale()
-  const dataFormatada = new Date(prescricao.criadoEm).toLocaleDateString(locale)
+  const formattedDate = new Date(prescription.createdAt).toLocaleDateString(locale)
 
   return (
     <>
@@ -29,22 +30,33 @@ export function PrescricaoCard({ prescricao, onExcluir }: PrescricaoCardProps) {
       >
         <Flex justify="space-between" align="start" mb="3">
           <Box>
-            <Link href={`/prescricoes/${prescricao.id}`}>
+            <Link href={`/prescriptions/${prescription.id}`}>
               <Text fontWeight="semibold" fontSize="lg" _hover={{ color: "blue.500" }}>
-                {prescricao.paciente.nome}
+                {prescription.patient.name}
               </Text>
             </Link>
             <Text color="fg.muted" fontSize="sm">
-              {dataFormatada}
+              {formattedDate}
             </Text>
           </Box>
           <Flex gap="1">
-            <Link href={`/prescricoes/${prescricao.id}/documento`}>
+            <Link href={`/prescriptions/${prescription.id}/document`}>
               <IconButton aria-label={t("prescriptionCard.generateDoc")} variant="ghost" size="sm" colorPalette="green">
                 <LuPrinter />
               </IconButton>
             </Link>
-            <Link href={`/prescricoes/${prescricao.id}`}>
+            {onDuplicate && (
+              <IconButton
+                aria-label={t("prescriptions.duplicate")}
+                variant="ghost"
+                size="sm"
+                colorPalette="blue"
+                onClick={() => onDuplicate(prescription.id)}
+              >
+                <LuCopy />
+              </IconButton>
+            )}
+            <Link href={`/prescriptions/${prescription.id}`}>
               <IconButton aria-label={t("common.edit")} variant="ghost" size="sm">
                 <LuPencil />
               </IconButton>
@@ -62,14 +74,14 @@ export function PrescricaoCard({ prescricao, onExcluir }: PrescricaoCardProps) {
         </Flex>
 
         <Flex gap="2" flexWrap="wrap">
-          {prescricao.medicamentos.map((med) => (
+          {prescription.medications.map((med) => (
             <Badge key={med.id} variant="subtle" colorPalette="blue" fontSize="xs">
-              {med.nome}
+              {med.name}
             </Badge>
           ))}
         </Flex>
 
-        {prescricao.medicamentos.length === 0 && (
+        {prescription.medications.length === 0 && (
           <Text color="fg.muted" fontSize="sm">
             {t("prescriptions.noMedications")}
           </Text>
@@ -79,9 +91,9 @@ export function PrescricaoCard({ prescricao, onExcluir }: PrescricaoCardProps) {
       <ConfirmDialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={() => onExcluir(prescricao.id)}
+        onConfirm={() => onRemove(prescription.id)}
         title={t("prescriptionCard.deleteTitle")}
-        description={t("prescriptionCard.deleteDesc", { name: prescricao.paciente.nome })}
+        description={t("prescriptionCard.deleteDesc", { name: prescription.patient.name })}
       />
     </>
   )

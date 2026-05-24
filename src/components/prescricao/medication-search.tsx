@@ -2,23 +2,23 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Box, Input, VStack, Text, Flex, Spinner } from "@chakra-ui/react"
-import { buscarMedicamentos } from "@/lib/api"
-import type { MedicamentoAPI } from "@/types"
+import { searchMedications } from "@/lib/api"
+import type { MedicationAPI } from "@/types"
 
-interface MedicamentoSearchProps {
+interface MedicationSearchProps {
   value: string
   onChange: (value: string) => void
-  onSelect: (medicamento: MedicamentoAPI) => void
+  onSelect: (medication: MedicationAPI) => void
   placeholder?: string
 }
 
-export function MedicamentoSearch({
+export function MedicationSearch({
   value,
   onChange,
   onSelect,
-  placeholder = "Buscar medicamento...",
-}: MedicamentoSearchProps) {
-  const [resultados, setResultados] = useState<MedicamentoAPI[]>([])
+  placeholder = "Search medication...",
+}: MedicationSearchProps) {
+  const [results, setResults] = useState<MedicationAPI[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -28,16 +28,16 @@ export function MedicamentoSearch({
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
 
     if (value.trim().length < 3) {
-      setResultados([])
+      setResults([])
       setIsOpen(false)
       return
     }
 
     timeoutRef.current = setTimeout(async () => {
       setIsLoading(true)
-      const results = await buscarMedicamentos(value)
-      setResultados(results)
-      setIsOpen(results.length > 0)
+      const data = await searchMedications(value)
+      setResults(data)
+      setIsOpen(data.length > 0)
       setIsLoading(false)
     }, 400)
 
@@ -65,7 +65,7 @@ export function MedicamentoSearch({
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onFocus={() => resultados.length > 0 && setIsOpen(true)}
+          onFocus={() => results.length > 0 && setIsOpen(true)}
           placeholder={placeholder}
         />
         {isLoading && <Spinner size="sm" />}
@@ -87,9 +87,9 @@ export function MedicamentoSearch({
           overflowY="auto"
         >
           <VStack gap="0" align="stretch">
-            {resultados.slice(0, 8).map((med, i) => (
+            {results.slice(0, 8).map((med, i) => (
               <Box
-                key={`${med.nome}-${i}`}
+                key={`${med.name}-${i}`}
                 px="3"
                 py="2"
                 cursor="pointer"
@@ -100,11 +100,11 @@ export function MedicamentoSearch({
                 }}
               >
                 <Text fontSize="sm" fontWeight="medium">
-                  {med.nome}
+                  {med.name}
                 </Text>
-                {med.laboratorio && (
+                {med.laboratory && (
                   <Text fontSize="xs" color="fg.muted">
-                    {med.laboratorio}
+                    {med.laboratory}
                   </Text>
                 )}
               </Box>

@@ -8,6 +8,9 @@ import {
   Heading,
   IconButton,
   Input,
+  NativeSelectField,
+  NativeSelectIndicator,
+  NativeSelectRoot,
   Text,
   Textarea,
   VStack,
@@ -15,51 +18,52 @@ import {
   Badge,
 } from "@chakra-ui/react"
 import { LuPlus, LuTrash2 } from "react-icons/lu"
-import type { Medicamento, Paciente, WeightUnit, HeightUnit } from "@/types"
+import type { Medication, Patient, WeightUnit, HeightUnit } from "@/types"
 import type { TranslationKey } from "@/locales"
 import { Field } from "@chakra-ui/react"
 import { toaster } from "@/components/ui/toaster"
 import { useLocale } from "@/hooks/use-locale"
 import { MeasurementInput } from "@/components/ui/measurement-input"
+import { MEDICATION_ROUTES } from "@/lib/medication-routes"
 
-interface PrescricaoFormProps {
-  initialPaciente?: Paciente
-  initialMedicamentos?: Medicamento[]
-  initialObservacoes?: string
+interface PrescriptionFormProps {
+  initialPatient?: Patient
+  initialMedications?: Medication[]
+  initialNotes?: string
   onSubmit: (data: {
-    paciente: Paciente
-    medicamentos: Medicamento[]
-    observacoes?: string
+    patient: Patient
+    medications: Medication[]
+    notes?: string
   }) => void
   submitLabel?: string
 }
 
-function criarMedicamentoVazio(): Medicamento {
+function createEmptyMedication(): Medication {
   return {
     id: crypto.randomUUID(),
-    nome: "",
-    dosagem: "",
-    via: "Oral",
-    frequencia: "",
-    duracao: "",
-    observacoes: "",
+    name: "",
+    dosage: "",
+    route: "Oral",
+    frequency: "",
+    duration: "",
+    notes: "",
   }
 }
 
-function calcularIMC(paciente: Paciente): number | null {
-  if (!paciente.peso || !paciente.altura) return null
+function calculateBMI(patient: Patient): number | null {
+  if (!patient.weight || !patient.height) return null
 
-  let pesoKg = paciente.peso
-  if (paciente.pesoUnidade === "lb") pesoKg = paciente.peso * 0.453592
+  let weightKg = patient.weight
+  if (patient.weightUnit === "lb") weightKg = patient.weight * 0.453592
 
-  let alturaM = paciente.altura
-  if ((paciente.alturaUnidade ?? "cm") === "cm") alturaM = paciente.altura / 100
+  let heightM = patient.height
+  if ((patient.heightUnit ?? "cm") === "cm") heightM = patient.height / 100
 
-  if (alturaM <= 0 || pesoKg <= 0) return null
-  return pesoKg / (alturaM * alturaM)
+  if (heightM <= 0 || weightKg <= 0) return null
+  return weightKg / (heightM * heightM)
 }
 
-function classificarIMC(bmi: number): { labelKey: TranslationKey; color: string } {
+function classifyBMI(bmi: number): { labelKey: TranslationKey; color: string } {
   if (bmi < 18.5) return { labelKey: "prescriptionForm.bmiClassification.underweight", color: "yellow" }
   if (bmi < 25) return { labelKey: "prescriptionForm.bmiClassification.normal", color: "green" }
   if (bmi < 30) return { labelKey: "prescriptionForm.bmiClassification.overweight", color: "orange" }
@@ -68,83 +72,81 @@ function classificarIMC(bmi: number): { labelKey: TranslationKey; color: string 
   return { labelKey: "prescriptionForm.bmiClassification.obese3", color: "red" }
 }
 
-export { calcularIMC }
-
 interface FormErrors {
-  pacienteNome?: string
-  pacienteIdade?: string
-  medicamentos?: Record<string, Record<string, string>>
+  patientName?: string
+  patientAge?: string
+  medications?: Record<string, Record<string, string>>
 }
 
-export function PrescricaoForm({
-  initialPaciente,
-  initialMedicamentos,
-  initialObservacoes,
+export function PrescriptionForm({
+  initialPatient,
+  initialMedications,
+  initialNotes,
   onSubmit,
   submitLabel,
-}: PrescricaoFormProps) {
+}: PrescriptionFormProps) {
   const { t } = useLocale()
 
-  const [paciente, setPaciente] = useState<Paciente>(
-    initialPaciente ?? { nome: "" }
+  const [patient, setPatient] = useState<Patient>(
+    initialPatient ?? { name: "" }
   )
-  const [medicamentos, setMedicamentos] = useState<Medicamento[]>(
-    initialMedicamentos ?? [criarMedicamentoVazio()]
+  const [medications, setMedications] = useState<Medication[]>(
+    initialMedications ?? [createEmptyMedication()]
   )
-  const [observacoes, setObservacoes] = useState(initialObservacoes ?? "")
+  const [notes, setNotes] = useState(initialNotes ?? "")
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
   function validate(
-    paciente: Paciente,
-    medicamentos: Medicamento[]
+    patient: Patient,
+    medications: Medication[]
   ): FormErrors {
     const errors: FormErrors = {}
 
-    if (!paciente.nome.trim()) {
-      errors.pacienteNome = t("validation.patientNameRequired")
-    } else if (paciente.nome.trim().length < 2) {
-      errors.pacienteNome = t("validation.patientNameMin")
+    if (!patient.name.trim()) {
+      errors.patientName = t("validation.patientNameRequired")
+    } else if (patient.name.trim().length < 2) {
+      errors.patientName = t("validation.patientNameMin")
     }
 
-    if (paciente.idade !== undefined && paciente.idade !== null) {
-      if (paciente.idade < 0 || paciente.idade > 150) {
-        errors.pacienteIdade = t("validation.ageRange")
+    if (patient.age !== undefined && patient.age !== null) {
+      if (patient.age < 0 || patient.age > 150) {
+        errors.patientAge = t("validation.ageRange")
       }
     }
 
     const medErrors: Record<string, Record<string, string>> = {}
-    const medsPreenchidos = medicamentos.filter(
-      (m) => m.nome.trim() || m.dosagem.trim() || m.frequencia.trim()
+    const filledMeds = medications.filter(
+      (m) => m.name.trim() || m.dosage.trim() || m.frequency.trim()
     )
 
-    medsPreenchidos.forEach((med) => {
+    filledMeds.forEach((med) => {
       const errs: Record<string, string> = {}
-      if (!med.nome.trim()) errs.nome = t("validation.medNameRequired")
-      if (!med.dosagem.trim()) errs.dosagem = t("validation.medDosageRequired")
-      if (!med.frequencia.trim()) errs.frequencia = t("validation.medFrequencyRequired")
+      if (!med.name.trim()) errs.name = t("validation.medNameRequired")
+      if (!med.dosage.trim()) errs.dosage = t("validation.medDosageRequired")
+      if (!med.frequency.trim()) errs.frequency = t("validation.medFrequencyRequired")
       if (Object.keys(errs).length > 0) medErrors[med.id] = errs
     })
 
-    if (Object.keys(medErrors).length > 0) errors.medicamentos = medErrors
+    if (Object.keys(medErrors).length > 0) errors.medications = medErrors
 
     return errors
   }
 
   useEffect(() => {
     if (Object.keys(touched).length > 0) {
-      const allErrors = validate(paciente, medicamentos)
+      const allErrors = validate(patient, medications)
       const visibleErrors: FormErrors = {}
 
-      if (touched.pacienteNome && allErrors.pacienteNome) {
-        visibleErrors.pacienteNome = allErrors.pacienteNome
+      if (touched.patientName && allErrors.patientName) {
+        visibleErrors.patientName = allErrors.patientName
       }
-      if (touched.pacienteIdade && allErrors.pacienteIdade) {
-        visibleErrors.pacienteIdade = allErrors.pacienteIdade
+      if (touched.patientAge && allErrors.patientAge) {
+        visibleErrors.patientAge = allErrors.patientAge
       }
-      if (allErrors.medicamentos) {
+      if (allErrors.medications) {
         const visibleMedErrors: Record<string, Record<string, string>> = {}
-        for (const [medId, medErrs] of Object.entries(allErrors.medicamentos)) {
+        for (const [medId, medErrs] of Object.entries(allErrors.medications)) {
           const visible: Record<string, string> = {}
           for (const [field, msg] of Object.entries(medErrs)) {
             if (touched[`med_${medId}_${field}`]) visible[field] = msg
@@ -152,14 +154,14 @@ export function PrescricaoForm({
           if (Object.keys(visible).length > 0) visibleMedErrors[medId] = visible
         }
         if (Object.keys(visibleMedErrors).length > 0) {
-          visibleErrors.medicamentos = visibleMedErrors
+          visibleErrors.medications = visibleMedErrors
         }
       }
 
       setErrors(visibleErrors)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paciente, medicamentos, touched])
+  }, [patient, medications, touched])
 
   const handleBlur = (key: string) => {
     setTouched((prev) => ({ ...prev, [key]: true }))
@@ -167,47 +169,47 @@ export function PrescricaoForm({
 
   const touchAll = () => {
     const allTouched: Record<string, boolean> = {
-      pacienteNome: true,
-      pacienteIdade: true,
+      patientName: true,
+      patientAge: true,
     }
-    medicamentos.forEach((med) => {
-      allTouched[`med_${med.id}_nome`] = true
-      allTouched[`med_${med.id}_dosagem`] = true
-      allTouched[`med_${med.id}_frequencia`] = true
+    medications.forEach((med) => {
+      allTouched[`med_${med.id}_name`] = true
+      allTouched[`med_${med.id}_dosage`] = true
+      allTouched[`med_${med.id}_frequency`] = true
     })
     setTouched(allTouched)
   }
 
-  const adicionarMedicamento = () => {
-    setMedicamentos((prev) => [...prev, criarMedicamentoVazio()])
+  const addMedication = () => {
+    setMedications((prev) => [...prev, createEmptyMedication()])
   }
 
-  const removerMedicamento = (id: string) => {
-    setMedicamentos((prev) => prev.filter((m) => m.id !== id))
+  const removeMedication = (id: string) => {
+    setMedications((prev) => prev.filter((m) => m.id !== id))
   }
 
-  const atualizarMedicamento = (
+  const updateMedication = (
     id: string,
-    field: keyof Medicamento,
+    field: keyof Medication,
     value: string
   ) => {
-    setMedicamentos((prev) =>
+    setMedications((prev) =>
       prev.map((m) => (m.id === id ? { ...m, [field]: value } : m))
     )
   }
 
   const getMedError = (medId: string, field: string) =>
-    errors.medicamentos?.[medId]?.[field]
+    errors.medications?.[medId]?.[field]
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     touchAll()
 
-    const allErrors = validate(paciente, medicamentos)
+    const allErrors = validate(patient, medications)
     if (
-      allErrors.pacienteNome ||
-      allErrors.pacienteIdade ||
-      (allErrors.medicamentos && Object.keys(allErrors.medicamentos).length > 0)
+      allErrors.patientName ||
+      allErrors.patientAge ||
+      (allErrors.medications && Object.keys(allErrors.medications).length > 0)
     ) {
       setErrors(allErrors)
       toaster.error({ title: t("prescriptionForm.fixErrors") })
@@ -215,63 +217,63 @@ export function PrescricaoForm({
     }
 
     onSubmit({
-      paciente,
-      medicamentos: medicamentos.filter((m) => m.nome.trim() !== ""),
-      observacoes: observacoes || undefined,
+      patient,
+      medications: medications.filter((m) => m.name.trim() !== ""),
+      notes: notes || undefined,
     })
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate>
       <VStack gap="6" align="stretch">
-        {/* Dados do Paciente */}
+        {/* Patient Data */}
         <Box>
           <Heading size="md" mb="4">
             {t("prescriptionForm.patient")}
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap="4">
-            <Field.Root required invalid={!!errors.pacienteNome}>
+            <Field.Root required invalid={!!errors.patientName}>
               <Field.Label>{t("common.name")}</Field.Label>
               <Input
                 placeholder={t("prescriptionForm.patientName")}
-                value={paciente.nome}
+                value={patient.name}
                 onChange={(e) =>
-                  setPaciente((p) => ({ ...p, nome: e.target.value }))
+                  setPatient((p) => ({ ...p, name: e.target.value }))
                 }
-                onBlur={() => handleBlur("pacienteNome")}
+                onBlur={() => handleBlur("patientName")}
               />
-              {errors.pacienteNome && (
-                <Field.ErrorText>{errors.pacienteNome}</Field.ErrorText>
+              {errors.patientName && (
+                <Field.ErrorText>{errors.patientName}</Field.ErrorText>
               )}
             </Field.Root>
-            <Field.Root invalid={!!errors.pacienteIdade}>
+            <Field.Root invalid={!!errors.patientAge}>
               <Field.Label>{t("prescriptionForm.age")}</Field.Label>
               <Input
                 type="number"
                 placeholder={t("prescriptionForm.age")}
-                value={paciente.idade ?? ""}
+                value={patient.age ?? ""}
                 onChange={(e) =>
-                  setPaciente((p) => ({
+                  setPatient((p) => ({
                     ...p,
-                    idade: e.target.value ? Number(e.target.value) : undefined,
+                    age: e.target.value ? Number(e.target.value) : undefined,
                   }))
                 }
-                onBlur={() => handleBlur("pacienteIdade")}
+                onBlur={() => handleBlur("patientAge")}
               />
-              {errors.pacienteIdade && (
-                <Field.ErrorText>{errors.pacienteIdade}</Field.ErrorText>
+              {errors.patientAge && (
+                <Field.ErrorText>{errors.patientAge}</Field.ErrorText>
               )}
             </Field.Root>
             <Field.Root>
               <Field.Label>{t("prescriptionForm.weight")}</Field.Label>
               <MeasurementInput
-                value={paciente.peso}
-                unit={paciente.pesoUnidade ?? "kg"}
+                value={patient.weight}
+                unit={patient.weightUnit ?? "kg"}
                 onValueChange={(v) =>
-                  setPaciente((p) => ({ ...p, peso: v }))
+                  setPatient((p) => ({ ...p, weight: v }))
                 }
                 onUnitChange={(u) =>
-                  setPaciente((p) => ({ ...p, pesoUnidade: u as WeightUnit }))
+                  setPatient((p) => ({ ...p, weightUnit: u as WeightUnit }))
                 }
                 units={[
                   { value: "kg", label: "kg" },
@@ -285,13 +287,13 @@ export function PrescricaoForm({
             <Field.Root>
               <Field.Label>{t("prescriptionForm.height")}</Field.Label>
               <MeasurementInput
-                value={paciente.altura}
-                unit={paciente.alturaUnidade ?? "cm"}
+                value={patient.height}
+                unit={patient.heightUnit ?? "cm"}
                 onValueChange={(v) =>
-                  setPaciente((p) => ({ ...p, altura: v }))
+                  setPatient((p) => ({ ...p, height: v }))
                 }
                 onUnitChange={(u) =>
-                  setPaciente((p) => ({ ...p, alturaUnidade: u as HeightUnit }))
+                  setPatient((p) => ({ ...p, heightUnit: u as HeightUnit }))
                 }
                 units={[
                   { value: "cm", label: "cm" },
@@ -304,11 +306,11 @@ export function PrescricaoForm({
             </Field.Root>
           </SimpleGrid>
 
-          {/* IMC Display */}
+          {/* BMI Display */}
           {(() => {
-            const bmi = calcularIMC(paciente)
+            const bmi = calculateBMI(patient)
             if (bmi === null) return null
-            const cls = classificarIMC(bmi)
+            const cls = classifyBMI(bmi)
             return (
               <Flex align="center" gap="3" mt="4" p="3" borderWidth="1px" borderRadius="md" bg="bg.subtle">
                 <Text fontSize="sm" fontWeight="medium">
@@ -326,38 +328,38 @@ export function PrescricaoForm({
           })()}
         </Box>
 
-        {/* Medicamentos */}
+        {/* Medications */}
         <Box>
           <Flex justify="space-between" align="center" mb="4">
             <Heading size="md">{t("medications.title")}</Heading>
-            <Button size="sm" variant="outline" onClick={adicionarMedicamento}>
+            <Button size="sm" variant="outline" onClick={addMedication}>
               <LuPlus />
               {t("common.add")}
             </Button>
           </Flex>
 
           <VStack gap="4" align="stretch">
-            {medicamentos.map((med, index) => (
+            {medications.map((med, index) => (
               <Box
                 key={med.id}
                 p="4"
                 borderWidth="1px"
                 borderRadius="md"
                 borderColor={
-                  errors.medicamentos?.[med.id] ? "red.500" : undefined
+                  errors.medications?.[med.id] ? "red.500" : undefined
                 }
               >
                 <Flex justify="space-between" align="center" mb="3">
                   <Text fontWeight="medium" fontSize="sm" color="fg.muted">
                     {t("medications.medication")} {index + 1}
                   </Text>
-                  {medicamentos.length > 1 && (
+                  {medications.length > 1 && (
                     <IconButton
                       aria-label={t("medications.remove")}
                       variant="ghost"
                       size="xs"
                       colorPalette="red"
-                      onClick={() => removerMedicamento(med.id)}
+                      onClick={() => removeMedication(med.id)}
                     >
                       <LuTrash2 />
                     </IconButton>
@@ -365,61 +367,70 @@ export function PrescricaoForm({
                 </Flex>
 
                 <SimpleGrid columns={{ base: 1, md: 2 }} gap="3">
-                  <Field.Root required invalid={!!getMedError(med.id, "nome")}>
+                  <Field.Root required invalid={!!getMedError(med.id, "name")}>
                     <Field.Label>{t("medications.name")}</Field.Label>
                     <Input
                       placeholder={t("medications.namePlaceholder")}
-                      value={med.nome}
+                      value={med.name}
                       onChange={(e) =>
-                        atualizarMedicamento(med.id, "nome", e.target.value)
+                        updateMedication(med.id, "name", e.target.value)
                       }
-                      onBlur={() => handleBlur(`med_${med.id}_nome`)}
+                      onBlur={() => handleBlur(`med_${med.id}_name`)}
                     />
-                    {getMedError(med.id, "nome") && (
+                    {getMedError(med.id, "name") && (
                       <Field.ErrorText>
-                        {getMedError(med.id, "nome")}
+                        {getMedError(med.id, "name")}
                       </Field.ErrorText>
                     )}
                   </Field.Root>
-                  <Field.Root required invalid={!!getMedError(med.id, "dosagem")}>
+                  <Field.Root required invalid={!!getMedError(med.id, "dosage")}>
                     <Field.Label>{t("medications.dosage")}</Field.Label>
                     <Input
                       placeholder={t("medications.dosagePlaceholder")}
-                      value={med.dosagem}
+                      value={med.dosage}
                       onChange={(e) =>
-                        atualizarMedicamento(med.id, "dosagem", e.target.value)
+                        updateMedication(med.id, "dosage", e.target.value)
                       }
-                      onBlur={() => handleBlur(`med_${med.id}_dosagem`)}
+                      onBlur={() => handleBlur(`med_${med.id}_dosage`)}
                     />
-                    {getMedError(med.id, "dosagem") && (
+                    {getMedError(med.id, "dosage") && (
                       <Field.ErrorText>
-                        {getMedError(med.id, "dosagem")}
+                        {getMedError(med.id, "dosage")}
                       </Field.ErrorText>
                     )}
                   </Field.Root>
                   <Field.Root>
                     <Field.Label>{t("medications.route")}</Field.Label>
-                    <Input
-                      placeholder={t("medications.routePlaceholder")}
-                      value={med.via}
-                      onChange={(e) =>
-                        atualizarMedicamento(med.id, "via", e.target.value)
-                      }
-                    />
+                    <NativeSelectRoot>
+                      <NativeSelectField
+                        value={med.route}
+                        onChange={(e) =>
+                          updateMedication(med.id, "route", e.target.value)
+                        }
+                      >
+                        <option value="">{t("medications.routeSelect")}</option>
+                        {MEDICATION_ROUTES.map((r) => (
+                          <option key={r.value} value={r.value}>
+                            {t(r.labelKey)}
+                          </option>
+                        ))}
+                      </NativeSelectField>
+                      <NativeSelectIndicator />
+                    </NativeSelectRoot>
                   </Field.Root>
-                  <Field.Root required invalid={!!getMedError(med.id, "frequencia")}>
+                  <Field.Root required invalid={!!getMedError(med.id, "frequency")}>
                     <Field.Label>{t("medications.frequency")}</Field.Label>
                     <Input
                       placeholder={t("medications.frequencyPlaceholder")}
-                      value={med.frequencia}
+                      value={med.frequency}
                       onChange={(e) =>
-                        atualizarMedicamento(med.id, "frequencia", e.target.value)
+                        updateMedication(med.id, "frequency", e.target.value)
                       }
-                      onBlur={() => handleBlur(`med_${med.id}_frequencia`)}
+                      onBlur={() => handleBlur(`med_${med.id}_frequency`)}
                     />
-                    {getMedError(med.id, "frequencia") && (
+                    {getMedError(med.id, "frequency") && (
                       <Field.ErrorText>
-                        {getMedError(med.id, "frequencia")}
+                        {getMedError(med.id, "frequency")}
                       </Field.ErrorText>
                     )}
                   </Field.Root>
@@ -427,9 +438,9 @@ export function PrescricaoForm({
                     <Field.Label>{t("medications.duration")}</Field.Label>
                     <Input
                       placeholder={t("medications.durationPlaceholder")}
-                      value={med.duracao ?? ""}
+                      value={med.duration ?? ""}
                       onChange={(e) =>
-                        atualizarMedicamento(med.id, "duracao", e.target.value)
+                        updateMedication(med.id, "duration", e.target.value)
                       }
                     />
                   </Field.Root>
@@ -437,9 +448,9 @@ export function PrescricaoForm({
                     <Field.Label>{t("medications.observations")}</Field.Label>
                     <Input
                       placeholder={t("medications.observationsPlaceholder")}
-                      value={med.observacoes ?? ""}
+                      value={med.notes ?? ""}
                       onChange={(e) =>
-                        atualizarMedicamento(med.id, "observacoes", e.target.value)
+                        updateMedication(med.id, "notes", e.target.value)
                       }
                     />
                   </Field.Root>
@@ -449,13 +460,13 @@ export function PrescricaoForm({
           </VStack>
         </Box>
 
-        {/* Observações Gerais */}
+        {/* General Notes */}
         <Field.Root>
           <Field.Label>{t("prescriptionForm.generalObs")}</Field.Label>
           <Textarea
             placeholder={t("prescriptionForm.generalObsPlaceholder")}
-            value={observacoes}
-            onChange={(e) => setObservacoes(e.target.value)}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
             rows={3}
           />
         </Field.Root>

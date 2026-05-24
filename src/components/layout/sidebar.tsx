@@ -14,9 +14,9 @@ import type { TranslationKey } from "@/locales"
 
 const navItems: { href: string; labelKey: TranslationKey; icon: React.ElementType }[] = [
   { href: "/", labelKey: "sidebar.dashboard", icon: LuLayoutDashboard },
-  { href: "/prescricoes", labelKey: "sidebar.prescriptions", icon: LuFileText },
+  { href: "/prescriptions", labelKey: "sidebar.prescriptions", icon: LuFileText },
   { href: "/templates", labelKey: "sidebar.templates", icon: LuLayoutTemplate },
-  { href: "/configuracoes", labelKey: "sidebar.settings", icon: LuSettings },
+  { href: "/settings", labelKey: "sidebar.settings", icon: LuSettings },
 ]
 
 export function Sidebar() {

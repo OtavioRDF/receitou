@@ -1,10 +1,10 @@
 import type { CID } from "@/types"
 
-export async function buscarCID(termo: string): Promise<CID[]> {
-  if (termo.trim().length < 2) return []
+export async function searchCID(term: string): Promise<CID[]> {
+  if (term.trim().length < 2) return []
 
   try {
-    const res = await fetch(`/api/cid?q=${encodeURIComponent(termo)}`)
+    const res = await fetch(`/api/cid?q=${encodeURIComponent(term)}`)
     if (!res.ok) return []
     return await res.json()
   } catch {
